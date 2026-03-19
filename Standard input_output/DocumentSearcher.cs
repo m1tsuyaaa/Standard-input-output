@@ -4,19 +4,19 @@ using System.IO;
 
 public class DocumentSearcher
 {
-  public string rootDirectory;
-  public List<TextDocument> documents;
+  public string RootDirectory;
+  public List<TextDocument> Documents;
 
   public DocumentSearcher(string directory)
   {
-    rootDirectory = directory;
-    documents = new List<TextDocument>();
+    RootDirectory = directory;
+    Documents = new List<TextDocument>();
   }
 
   public void IndexAll()
   {
     string[] textFiles;
-    textFiles = Directory.GetFiles(rootDirectory, "*.txt", SearchOption.AllDirectories);
+    textFiles = Directory.GetFiles(RootDirectory, "*.txt", SearchOption.AllDirectories);
 
     int index;
     TextDocument document;
@@ -26,7 +26,7 @@ public class DocumentSearcher
       try
       {
         document = new TextDocument(textFiles[index]);
-        documents.Add(document);
+        Documents.Add(document);
       }
       catch
       {
@@ -34,13 +34,13 @@ public class DocumentSearcher
     }
   }
 
-  int baseStackSize;
-  baseStackSize = -1;
-
   public List<TextDocument> Search(List<string> keywords, bool caseSensitive = false)
   {
-    List<TextDocument> searchResults = new List<TextDocument>();
-    StringComparison comparisonType = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+    List<TextDocument> searchResults;
+    searchResults = new List<TextDocument>();
+
+    StringComparison comparisonType;
+    comparisonType = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 
     int documentIndex;
     int keywordIndex;
@@ -49,17 +49,17 @@ public class DocumentSearcher
     string currentKeyword;
     bool documentMatches;
 
-    for (documentIndex = 0; documentIndex < documents.Count; ++documentIndex)
+    for (documentIndex = 0; documentIndex < Documents.Count; ++documentIndex)
     {
-      currentDocument = documents[documentIndex];
+      currentDocument = Documents[documentIndex];
       documentMatches = true;
 
       for (keywordIndex = 0; keywordIndex < keywords.Count; ++keywordIndex)
       {
         currentKeyword = keywords[keywordIndex];
-        keywordPosition = currentDocument.content.IndexOf(currentKeyword, comparisonType);
+        keywordPosition = currentDocument.Content.IndexOf(currentKeyword, comparisonType);
 
-        if (keywordPosition == baseStackSize)
+        if (keywordPosition == -1)
         {
           documentMatches = false;
           break;

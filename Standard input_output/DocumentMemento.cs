@@ -3,37 +3,54 @@ using System.Collections.Generic;
 
 public class DocumentMemento
 {
-  public string content;
-  public DateTime timestamp;
+  public string Content;
+  public DateTime Timestamp;
 
   public DocumentMemento(string documentContent)
   {
-    content = documentContent;
-    timestamp = DateTime.Now;
+    Content = documentContent;
+    Timestamp = DateTime.Now;
   }
 }
 
 public class DocumentHistory
 {
-  public Stack<DocumentMemento> undoStack;
-  public Stack<DocumentMemento> redoStack;
-  public TextDocument document;
+  public Stack<DocumentMemento> UndoStack;
+  public Stack<DocumentMemento> RedoStack;
+  public TextDocument Document;
 
   public DocumentHistory(TextDocument targetDocument)
   {
-    document = targetDocument;
-    undoStack = new Stack<DocumentMemento>();
-    redoStack = new Stack<DocumentMemento>();
+    Document = targetDocument;
+    UndoStack = new Stack<DocumentMemento>();
+    RedoStack = new Stack<DocumentMemento>();
     SaveState();
   }
 
   public void SaveState()
   {
-    undoStack.Push(new DocumentMemento(document.content));
-    redoStack.Clear();
+    UndoStack.Push(new DocumentMemento(Document.Content));
+    RedoStack.Clear();
   }
-  public bool CanUndo => undoStack.Count > 1;
-  public bool CanRedo => redoStack.Count > 0;
+  public bool CanUndo
+  {
+    get
+    {
+      bool canUndo;
+      canUndo = UndoStack.Count > 1;
+      return canUndo;
+    }
+  }
+
+  public bool CanRedo
+  {
+    get
+    {
+      bool canRedo;
+      canRedo = RedoStack.Count > 0;
+      return canRedo;
+    }
+  }
 
   public void Undo()
   {
@@ -42,11 +59,15 @@ public class DocumentHistory
       return;
     }
 
-    DocumentMemento currentState = undoStack.Pop();
-    redoStack.Push(currentState);
+    DocumentMemento currentState;
+    currentState = UndoStack.Pop();
 
-    DocumentMemento previousState = undoStack.Peek();
-    document.content = previousState.content;
+    RedoStack.Push(currentState);
+
+    DocumentMemento previousState;
+    previousState = UndoStack.Peek();
+
+    Document.Content = previousState.Content;
   }
 
   public void Redo()
@@ -56,8 +77,9 @@ public class DocumentHistory
       return;
     }
 
-    DocumentMemento redoState = redoStack.Pop();
-    undoStack.Push(redoState);
-    document.content = redoState.content;
+    DocumentMemento redoState;
+    redoState = RedoStack.Pop();
+    UndoStack.Push(redoState);
+    Document.Content = redoState.Content;
   }
 }

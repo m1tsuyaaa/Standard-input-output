@@ -3,15 +3,16 @@ using System.IO;
 
 public class ConsoleTextEditor
 {
-  public TextDocument currentDocument;
-  public DocumentHistory documentHistory;
+  public TextDocument CurrentDocument;
+  public DocumentHistory DocumentHistory;
 
   public void Run()
   {
     while (true)
     {
       DisplayMainMenu();
-      string userInput = Console.ReadLine();
+      string userInput;
+      userInput = Console.ReadLine();
 
       if (userInput == "1")
       {
@@ -46,9 +47,9 @@ public class ConsoleTextEditor
     Console.WriteLine("4. Сохранить документ");
     Console.WriteLine("5. Выход");
 
-    if (currentDocument != null)
+    if (CurrentDocument != null)
     {
-      Console.WriteLine($"\nТекущий документ: {currentDocument.FileName}");
+      Console.WriteLine($"\nТекущий документ: {CurrentDocument.FileName}");
     }
 
     Console.Write("\nВыберите действие: ");
@@ -57,12 +58,13 @@ public class ConsoleTextEditor
   public void OpenDocument()
   {
     Console.Write("Введите путь к файлу: ");
-    string filePath = Console.ReadLine();
+    string filePath;
+    filePath = Console.ReadLine();
 
     if (File.Exists(filePath))
     {
-      currentDocument = new TextDocument(filePath);
-      documentHistory = new DocumentHistory(currentDocument);
+      CurrentDocument = new TextDocument(filePath);
+      DocumentHistory = new DocumentHistory(CurrentDocument);
       Console.WriteLine("Документ загружен.");
     }
     else
@@ -77,14 +79,15 @@ public class ConsoleTextEditor
   public void CreateNewDocument()
   {
     Console.Write("Введите путь для нового файла: ");
-    string filePath = Console.ReadLine();
+    string filePath;
+    filePath = Console.ReadLine();
 
-    currentDocument = new TextDocument(filePath)
+    CurrentDocument = new TextDocument(filePath)
     {
-      content = string.Empty
+      Content = string.Empty
     };
 
-    documentHistory = new DocumentHistory(currentDocument);
+    DocumentHistory = new DocumentHistory(CurrentDocument);
     Console.WriteLine("Новый документ создан.");
     Console.WriteLine("Нажмите любую клавишу...");
     Console.ReadKey();
@@ -92,7 +95,7 @@ public class ConsoleTextEditor
 
   public void EditDocument()
   {
-    if (currentDocument == null)
+    if (CurrentDocument == null)
     {
       Console.WriteLine("Сначала откройте документ.");
       Console.WriteLine("Нажмите любую клавишу...");
@@ -111,19 +114,20 @@ public class ConsoleTextEditor
       Console.Clear();
       Console.WriteLine("Редактирование");
       Console.WriteLine(new string('-', fiftyPercentValue));
-      Console.WriteLine(currentDocument.content);
+      Console.WriteLine(CurrentDocument.Content);
       Console.WriteLine(new string('-', fiftyPercentValue));
       Console.WriteLine(":w - сохранить и выйти");
       Console.WriteLine(":q - выйти без сохранения");
       Console.WriteLine(":u - отменить");
       Console.WriteLine(":r - повторить");
 
-      string userInput = Console.ReadLine();
+      string userInput;
+      userInput = Console.ReadLine();
 
       if (userInput == ":w")
       {
-        currentDocument.SaveToFile();
-        documentHistory.SaveState();
+        CurrentDocument.SaveToFile();
+        DocumentHistory.SaveState();
         editing = false;
       }
       else if (userInput == ":q")
@@ -132,16 +136,16 @@ public class ConsoleTextEditor
       }
       else if (userInput == ":u")
       {
-        documentHistory.Undo();
+        DocumentHistory.Undo();
       }
       else if (userInput == ":r")
       {
-        documentHistory.Redo();
+        DocumentHistory.Redo();
       }
       else
       {
-        currentDocument.content += userInput + Environment.NewLine;
-        documentHistory.SaveState();
+        CurrentDocument.Content += userInput + Environment.NewLine;
+        DocumentHistory.SaveState();
       }
     }
   }

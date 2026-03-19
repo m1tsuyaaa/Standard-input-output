@@ -4,32 +4,33 @@ using System.IO;
 
 public class FileIndexerApplication
 {
-  public DocumentSearcher documentSearcher;
-  public string indexDirectory;
+  public DocumentSearcher DocumentSearcher;
+  public string IndexDirectory;
 
   public void Run()
   {
     Console.WriteLine("=== Индексатор текстовых файлов ===");
     Console.Write("Введите путь к директории: ");
-    indexDirectory = Console.ReadLine();
+    IndexDirectory = Console.ReadLine();
 
-    if (!Directory.Exists(indexDirectory))
+    if (!Directory.Exists(IndexDirectory))
     {
       Console.WriteLine("Директория не существует.");
       return;
     }
 
-    documentSearcher = new DocumentSearcher(indexDirectory);
+    DocumentSearcher = new DocumentSearcher(IndexDirectory);
 
     Console.WriteLine("Индексация файлов...");
-    documentSearcher.IndexAll();
+    DocumentSearcher.IndexAll();
 
-    Console.WriteLine($"Проиндексировано файлов: {documentSearcher.documents.Count}");
+    Console.WriteLine($"Проиндексировано файлов: {DocumentSearcher.Documents.Count}");
 
     while (true)
     {
       DisplayIndexerMenu();
-      string userChoice = Console.ReadLine();
+      string userChoice;
+      userChoice = Console.ReadLine();
 
       if (userChoice == "1")
       {
@@ -89,17 +90,24 @@ public class FileIndexerApplication
     caseSensitive = caseSensitiveInput?.ToLower() == "y";
 
     List<TextDocument> searchResults;
-    searchResults = documentSearcher.Search(keywords, caseSensitive);
+    searchResults = DocumentSearcher.Search(keywords, caseSensitive);
 
     Console.WriteLine($"\nНайдено документов: {searchResults.Count}");
 
     int resultIndex;
     TextDocument currentDocument;
 
+    int baseNumber;
+    baseNumber = 1;
+
     for (resultIndex = 0; resultIndex < searchResults.Count; ++resultIndex)
     {
       currentDocument = searchResults[resultIndex];
-      Console.WriteLine($"{resultIndex + 1}. {currentDocument.FileName}");
+
+      int displayNumber;
+      displayNumber = resultIndex + baseNumber;
+
+      Console.WriteLine($"{displayNumber}. {currentDocument.FileName}");
     }
 
     Console.WriteLine("\nНажмите любую клавишу...");
@@ -109,8 +117,8 @@ public class FileIndexerApplication
   public void ReindexDirectory()
   {
     Console.WriteLine("Переиндексация...");
-    documentSearcher.IndexAll();
-    Console.WriteLine($"Файлов: {documentSearcher.documents.Count}");
+    DocumentSearcher.IndexAll();
+    Console.WriteLine($"Файлов: {DocumentSearcher.Documents.Count}");
     Console.WriteLine("Нажмите любую клавишу...");
     Console.ReadKey();
   }
@@ -122,12 +130,12 @@ public class FileIndexerApplication
     int docIndex;
     TextDocument currentDocument;
 
-    for (docIndex = 0; docIndex < documentSearcher.documents.Count; ++docIndex)
+    for (docIndex = 0; docIndex < DocumentSearcher.Documents.Count; ++docIndex)
     {
-      currentDocument = documentSearcher.documents[docIndex];
+      currentDocument = DocumentSearcher.Documents[docIndex];
       Console.WriteLine($"{docIndex + 1}. {currentDocument.FileName}");
-      Console.WriteLine($"   Путь: {currentDocument.filePath}");
-      Console.WriteLine($"   Размер: {currentDocument.content.Length} симв.");
+      Console.WriteLine($"   Путь: {currentDocument.FilePath}");
+      Console.WriteLine($"   Размер: {currentDocument.Content.Length} симв.");
       Console.WriteLine();
     }
 

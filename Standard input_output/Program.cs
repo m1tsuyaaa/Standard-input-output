@@ -5,7 +5,7 @@ class Program
   static void Main(string[] args)
   {
     while (true)
-    {
+    { 
       Console.Clear();
       Console.WriteLine("=== Главное меню ===");
       Console.WriteLine("1. Текстовый редактор");
@@ -13,7 +13,8 @@ class Program
       Console.WriteLine("3. Выход");
       Console.Write("Выберите приложение: ");
 
-      string userChoice = Console.ReadLine();
+      string userChoice;
+      userChoice = Console.ReadLine();
 
       if (userChoice == "1")
       {

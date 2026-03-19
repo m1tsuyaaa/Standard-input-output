@@ -6,38 +6,50 @@ using System.Runtime.Serialization.Formatters.Binary;
 [Serializable]
 public class TextDocument
 {
-  public string filePath;
-  public string content;
+  public string FilePath;
+  public string Content;
   public DateTime lastModified;
 
-  public string FileName => Path.GetFileName(filePath);
+  public string FileName
+  {
+    get
+    {
+      string fileName;
+      fileName = Path.GetFileName(FilePath);
+      return fileName;
+    }
+  }
+
+  public string content { get; internal set; }
 
   public TextDocument() { }
 
   public TextDocument(string path)
   {
-    filePath = path;
+    FilePath = path;
     LoadFromFile();
   }
 
   public void LoadFromFile()
   {
-    if (File.Exists(filePath))
+    if (File.Exists(FilePath))
     {
-      content = File.ReadAllText(filePath);
-      lastModified = File.GetLastWriteTime(filePath);
+      Content = File.ReadAllText(FilePath);
+      lastModified = File.GetLastWriteTime(FilePath);
     }
   }
 
   public void SaveToFile()
   {
-    File.WriteAllText(filePath, content);
+    File.WriteAllText(FilePath, Content);
     lastModified = DateTime.Now;
   }
 
   public void BinarySerialize(string path)
   {
-    BinaryFormatter binaryFormatter = new BinaryFormatter();
+    BinaryFormatter binaryFormatter;
+    binaryFormatter = new BinaryFormatter();
+
     using (FileStream fileStream = new FileStream(path, FileMode.Create))
     {
       binaryFormatter.Serialize(fileStream, this);
@@ -46,16 +58,22 @@ public class TextDocument
 
   public static TextDocument BinaryDeserialize(string path)
   {
-    BinaryFormatter binaryFormatter = new BinaryFormatter();
+    BinaryFormatter binaryFormatter;
+    binaryFormatter = new BinaryFormatter();
+
     using (FileStream fileStream = new FileStream(path, FileMode.Open))
     {
-      return (TextDocument)binaryFormatter.Deserialize(fileStream);
+      TextDocument deserializedDocument;
+      deserializedDocument = (TextDocument)binaryFormatter.Deserialize(fileStream);
+      return deserializedDocument;
     }
   }
 
   public void XmlSerialize(string path)
   {
-    XmlSerializer xmlSerializer = new XmlSerializer(typeof(TextDocument));
+    XmlSerializer xmlSerializer;
+    xmlSerializer = new XmlSerializer(typeof(TextDocument));
+
     using (StreamWriter streamWriter = new StreamWriter(path))
     {
       xmlSerializer.Serialize(streamWriter, this);
@@ -64,10 +82,14 @@ public class TextDocument
 
   public static TextDocument XmlDeserialize(string path)
   {
-    XmlSerializer xmlSerializer = new XmlSerializer(typeof(TextDocument));
+    XmlSerializer xmlSerializer;
+    xmlSerializer = new XmlSerializer(typeof(TextDocument));
+
     using (StreamReader streamReader = new StreamReader(path))
     {
-      return (TextDocument)xmlSerializer.Deserialize(streamReader);
+      TextDocument deserializedDocument;
+      deserializedDocument = (TextDocument)xmlSerializer.Deserialize(streamReader);
+      return deserializedDocument;
     }
   }
 }
