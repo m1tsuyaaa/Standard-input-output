@@ -8,19 +8,24 @@ public class TextDocument
 {
   public string FilePath;
   public string Content;
-  public DateTime lastModified;
+  public DateTime LastModified;
+
+  public string FileName;
+  public BinaryFormatter BinaryFormatter;
+  public FileStream FileStream;
+  public TextDocument DeserializedDocument;
+  public XmlSerializer XmlSerializer;
+  public StreamWriter StreamWriter;
+  public StreamReader StreamReader;
 
   public string FileName
   {
     get
     {
-      string fileName;
-      fileName = Path.GetFileName(FilePath);
-      return fileName;
+      FileName = Path.GetFileName(FilePath);
+      return FileName;
     }
   }
-
-  public string content { get; internal set; }
 
   public TextDocument() { }
 
@@ -35,61 +40,67 @@ public class TextDocument
     if (File.Exists(FilePath))
     {
       Content = File.ReadAllText(FilePath);
-      lastModified = File.GetLastWriteTime(FilePath);
+      LastModified = File.GetLastWriteTime(FilePath);
     }
   }
 
   public void SaveToFile()
   {
     File.WriteAllText(FilePath, Content);
-    lastModified = DateTime.Now;
+    LastModified = DateTime.Now;
   }
 
   public void BinarySerialize(string path)
   {
-    BinaryFormatter binaryFormatter;
-    binaryFormatter = new BinaryFormatter();
+    BinaryFormatter = new BinaryFormatter();
+    FileStream = new FileStream(path, FileMode.Create);
 
-    using (FileStream fileStream = new FileStream(path, FileMode.Create))
+    using (FileStream)
     {
-      binaryFormatter.Serialize(fileStream, this);
+      BinaryFormatter.Serialize(FileStream, this);
     }
   }
 
   public static TextDocument BinaryDeserialize(string path)
   {
-    BinaryFormatter binaryFormatter;
-    binaryFormatter = new BinaryFormatter();
+    TextDocument document;
+    BinaryFormatter formatter;
+    FileStream stream;
 
-    using (FileStream fileStream = new FileStream(path, FileMode.Open))
+    formatter = new BinaryFormatter();
+    stream = new FileStream(path, FileMode.Open);
+
+    using (stream)
     {
-      TextDocument deserializedDocument;
-      deserializedDocument = (TextDocument)binaryFormatter.Deserialize(fileStream);
-      return deserializedDocument;
+      document = (TextDocument)formatter.Deserialize(stream);
+      return document;
     }
   }
 
   public void XmlSerialize(string path)
   {
-    XmlSerializer xmlSerializer;
-    xmlSerializer = new XmlSerializer(typeof(TextDocument));
+    XmlSerializer = new XmlSerializer(typeof(TextDocument));
+    StreamWriter = new StreamWriter(path);
 
-    using (StreamWriter streamWriter = new StreamWriter(path))
+    using (StreamWriter)
     {
-      xmlSerializer.Serialize(streamWriter, this);
+      XmlSerializer.Serialize(StreamWriter, this);
     }
   }
 
   public static TextDocument XmlDeserialize(string path)
   {
-    XmlSerializer xmlSerializer;
-    xmlSerializer = new XmlSerializer(typeof(TextDocument));
+    TextDocument document;
+    XmlSerializer serializer;
+    StreamReader reader;
 
-    using (StreamReader streamReader = new StreamReader(path))
+    serializer = new XmlSerializer(typeof(TextDocument));
+    reader = new StreamReader(path);
+
+    using (reader)
     {
-      TextDocument deserializedDocument;
-      deserializedDocument = (TextDocument)xmlSerializer.Deserialize(streamReader);
-      return deserializedDocument;
+      document = (TextDocument)serializer.Deserialize(reader);
+      return document;
     }
   }
 }

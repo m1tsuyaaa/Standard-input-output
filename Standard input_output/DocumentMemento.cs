@@ -19,6 +19,15 @@ public class DocumentHistory
   public Stack<DocumentMemento> RedoStack;
   public TextDocument Document;
 
+  public int MinimumStackSize;
+  public int CurrentStackSize;
+  public bool CanUndo;
+  public bool CanRedo;
+
+  public DocumentMemento CurrentState;
+  public DocumentMemento PreviousState;
+  public DocumentMemento RedoState;
+
   public DocumentHistory(TextDocument targetDocument)
   {
     Document = targetDocument;
@@ -32,21 +41,15 @@ public class DocumentHistory
     UndoStack.Push(new DocumentMemento(Document.Content));
     RedoStack.Clear();
   }
+
   public bool CanUndo
   {
     get
     {
-      bool canUndo;
-
-      int minimumStackSize;
-      minimumStackSize = 1;
-
-      int currentStackSize;
-      currentStackSize = UndoStack.Count;
-
-      canUndo = currentStackSize > minimumStackSize;
-
-      return canUndo;
+      MinimumStackSize = 1;
+      CurrentStackSize = UndoStack.Count;
+      CanUndo = CurrentStackSize > MinimumStackSize;
+      return CanUndo;
     }
   }
 
@@ -54,9 +57,8 @@ public class DocumentHistory
   {
     get
     {
-      bool canRedo;
-      canRedo = RedoStack.Count > 0;
-      return canRedo;
+      CanRedo = RedoStack.Count > 0;
+      return CanRedo;
     }
   }
 
@@ -67,15 +69,11 @@ public class DocumentHistory
       return;
     }
 
-    DocumentMemento currentState;
-    currentState = UndoStack.Pop();
+    CurrentState = UndoStack.Pop();
+    RedoStack.Push(CurrentState);
 
-    RedoStack.Push(currentState);
-
-    DocumentMemento previousState;
-    previousState = UndoStack.Peek();
-
-    Document.Content = previousState.Content;
+    PreviousState = UndoStack.Peek();
+    Document.Content = PreviousState.Content;
   }
 
   public void Redo()
@@ -85,9 +83,8 @@ public class DocumentHistory
       return;
     }
 
-    DocumentMemento redoState;
-    redoState = RedoStack.Pop();
-    UndoStack.Push(redoState);
-    Document.Content = redoState.Content;
+    RedoState = RedoStack.Pop();
+    UndoStack.Push(RedoState);
+    Document.Content = RedoState.Content;
   }
 }

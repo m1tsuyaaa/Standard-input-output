@@ -2,10 +2,12 @@
 
 class Program
 {
+  static string UserChoice;
+  static ConsoleTextEditor TextEditor;
+  static FileIndexerApplication FileIndexer;
+
   static void Main(string[] args)
   {
-    string userChoice;
-
     while (true)
     {
       Console.Clear();
@@ -15,21 +17,19 @@ class Program
       Console.WriteLine("3. Exit");
       Console.Write("Select application: ");
 
-      userChoice = Console.ReadLine();
+      UserChoice = Console.ReadLine();
 
-      if (userChoice == "1")
+      if (UserChoice == "1")
       {
-        ConsoleTextEditor textEditor;
-        textEditor = new ConsoleTextEditor();
-        textEditor.Run();
+        TextEditor = new ConsoleTextEditor();
+        TextEditor.Run();
       }
-      else if (userChoice == "2")
+      else if (UserChoice == "2")
       {
-        FileIndexerApplication fileIndexer;
-        fileIndexer = new FileIndexerApplication();
-        fileIndexer.Run();
+        FileIndexer = new FileIndexerApplication();
+        FileIndexer.Run();
       }
-      else if (userChoice == "3")
+      else if (UserChoice == "3")
       {
         return;
       }
@@ -40,3 +40,4 @@ class Program
       }
     }
   }
+}

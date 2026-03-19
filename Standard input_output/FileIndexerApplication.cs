@@ -6,6 +6,18 @@ public class FileIndexerApplication
 {
   public DocumentSearcher DocumentSearcher;
   public string IndexDirectory;
+  public string UserChoice;
+  public string KeywordInput;
+  public List<string> Keywords;
+  public int Index;
+  public string CaseSensitiveInput;
+  public bool CaseSensitive;
+  public List<TextDocument> SearchResults;
+  public int ResultIndex;
+  public TextDocument CurrentDocument;
+  public int BaseNumber;
+  public int DisplayNumber;
+  public int DocIndex;
 
   public void Run()
   {
@@ -26,26 +38,24 @@ public class FileIndexerApplication
 
     Console.WriteLine($"Files indexed: {DocumentSearcher.Documents.Count}");
 
-    string userChoice;
-
     while (true)
     {
       DisplayIndexerMenu();
-      userChoice = Console.ReadLine();
+      UserChoice = Console.ReadLine();
 
-      if (userChoice == "1")
+      if (UserChoice == "1")
       {
         PerformKeywordSearch();
       }
-      else if (userChoice == "2")
+      else if (UserChoice == "2")
       {
         ReindexDirectory();
       }
-      else if (userChoice == "3")
+      else if (UserChoice == "3")
       {
         DisplayAllDocuments();
       }
-      else if (userChoice == "4")
+      else if (UserChoice == "4")
       {
         return;
       }
@@ -69,48 +79,33 @@ public class FileIndexerApplication
   public void PerformKeywordSearch()
   {
     Console.Write("Enter keywords separated by commas: ");
-    string keywordInput;
-    keywordInput = Console.ReadLine();
+    KeywordInput = Console.ReadLine();
 
-    List<string> keywords;
-    keywords = new List<string>(
-        keywordInput.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+    Keywords = new List<string>(
+        KeywordInput.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
     );
 
-    int index;
-    for (index = 0; index < keywords.Count; ++index)
+    for (Index = 0; Index < Keywords.Count; ++Index)
     {
-      keywords[index] = keywords[index].Trim();
+      Keywords[Index] = Keywords[Index].Trim();
     }
 
     Console.Write("Case sensitive? (y/n): ");
-    string caseSensitiveInput;
-    caseSensitiveInput = Console.ReadLine();
+    CaseSensitiveInput = Console.ReadLine();
+    CaseSensitive = CaseSensitiveInput?.ToLower() == "y";
 
-    bool caseSensitive;
-    caseSensitive = caseSensitiveInput?.ToLower() == "y";
+    SearchResults = DocumentSearcher.Search(Keywords, CaseSensitive);
 
-    List<TextDocument> searchResults;
-    searchResults = DocumentSearcher.Search(keywords, caseSensitive);
+    Console.WriteLine($"\nDocuments found: {SearchResults.Count}");
 
-    Console.WriteLine($"\nDocuments found: {searchResults.Count}");
+    BaseNumber = 1;
 
-    int resultIndex;
-    TextDocument currentDocument;
-
-    int baseNumber;
-    baseNumber = 1;
-
-    int displayNumber;
-    int baseNumber;
-    baseNumber = 1;
-
-    for (resultIndex = 0; resultIndex < searchResults.Count; ++resultIndex)
+    for (ResultIndex = 0; ResultIndex < SearchResults.Count; ++ResultIndex)
     {
-      currentDocument = searchResults[resultIndex];
-      displayNumber = resultIndex + baseNumber;
+      CurrentDocument = SearchResults[ResultIndex];
+      DisplayNumber = ResultIndex + BaseNumber;
 
-      Console.WriteLine($"{displayNumber}. {currentDocument.FileName}");
+      Console.WriteLine($"{DisplayNumber}. {CurrentDocument.FileName}");
     }
 
     Console.WriteLine("\nPress any key...");
@@ -130,15 +125,12 @@ public class FileIndexerApplication
   {
     Console.WriteLine("\n=== All Documents ===");
 
-    int docIndex;
-    TextDocument currentDocument;
-
-    for (docIndex = 0; docIndex < DocumentSearcher.Documents.Count; ++docIndex)
+    for (DocIndex = 0; DocIndex < DocumentSearcher.Documents.Count; ++DocIndex)
     {
-      currentDocument = DocumentSearcher.Documents[docIndex];
-      Console.WriteLine($"{docIndex + 1}. {currentDocument.FileName}");
-      Console.WriteLine($"   Path: {currentDocument.FilePath}");
-      Console.WriteLine($"   Size: {currentDocument.Content.Length} chars");
+      CurrentDocument = DocumentSearcher.Documents[DocIndex];
+      Console.WriteLine($"{DocIndex + 1}. {CurrentDocument.FileName}");
+      Console.WriteLine($"   Path: {CurrentDocument.FilePath}");
+      Console.WriteLine($"   Size: {CurrentDocument.Content.Length} chars");
       Console.WriteLine();
     }
 

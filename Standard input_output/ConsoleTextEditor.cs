@@ -5,28 +5,36 @@ public class ConsoleTextEditor
 {
   public TextDocument CurrentDocument;
   public DocumentHistory DocumentHistory;
+  public string UserInput;
+  public string FilePath;
+  public bool Editing;
+  public int FiftyPercentValue;
+  public string EditUserInput;
 
   public void Run()
   {
     while (true)
     {
       DisplayMainMenu();
-      string userInput;
-      userInput = Console.ReadLine();
+      UserInput = Console.ReadLine();
 
-      if (userInput == "1")
+      if (UserInput == "1")
       {
         OpenDocument();
       }
-      else if (userInput == "2")
+      else if (UserInput == "2")
       {
         CreateNewDocument();
       }
-      else if (userInput == "3")
+      else if (UserInput == "3")
       {
         EditDocument();
       }
-      else if (userInput == "4")
+      else if (UserInput == "4")
+      {
+        SaveDocument();
+      }
+      else if (UserInput == "5")
       {
         return;
       }
@@ -58,12 +66,11 @@ public class ConsoleTextEditor
   public void OpenDocument()
   {
     Console.Write("Enter file path: ");
-    string filePath;
-    filePath = Console.ReadLine();
+    FilePath = Console.ReadLine();
 
-    if (File.Exists(filePath))
+    if (File.Exists(FilePath))
     {
-      CurrentDocument = new TextDocument(filePath);
+      CurrentDocument = new TextDocument(FilePath);
       DocumentHistory = new DocumentHistory(CurrentDocument);
       Console.WriteLine("Document loaded.");
     }
@@ -79,10 +86,9 @@ public class ConsoleTextEditor
   public void CreateNewDocument()
   {
     Console.Write("Enter path for new file: ");
-    string filePath;
-    filePath = Console.ReadLine();
+    FilePath = Console.ReadLine();
 
-    CurrentDocument = new TextDocument(filePath)
+    CurrentDocument = new TextDocument(FilePath)
     {
       Content = string.Empty
     };
@@ -103,54 +109,62 @@ public class ConsoleTextEditor
       return;
     }
 
-    bool editing;
-    editing = true;
+    Editing = true;
+    FiftyPercentValue = 50;
 
-    int fiftyPercentValue;
-    fiftyPercentValue = 50;
-
-    string userInput;
-
-    while (editing)
+    while (Editing)
     {
       Console.Clear();
       Console.WriteLine("Editing");
-
-      int fiftyPercentValue;
-      fiftyPercentValue = 50;
-
-      Console.WriteLine(new string('-', fiftyPercentValue));
+      Console.WriteLine(new string('-', FiftyPercentValue));
       Console.WriteLine(CurrentDocument.Content);
-      Console.WriteLine(new string('-', fiftyPercentValue));
+      Console.WriteLine(new string('-', FiftyPercentValue));
       Console.WriteLine(":w - save and exit");
       Console.WriteLine(":q - exit without saving");
       Console.WriteLine(":u - undo");
       Console.WriteLine(":r - redo");
 
-      userInput = Console.ReadLine();
+      EditUserInput = Console.ReadLine();
 
-      if (userInput == ":w")
+      if (EditUserInput == ":w")
       {
         CurrentDocument.SaveToFile();
         DocumentHistory.SaveState();
-        editing = false;
+        Editing = false;
       }
-      else if (userInput == ":q")
+      else if (EditUserInput == ":q")
       {
-        editing = false;
+        Editing = false;
       }
-      else if (userInput == ":u")
+      else if (EditUserInput == ":u")
       {
         DocumentHistory.Undo();
       }
-      else if (userInput == ":r")
+      else if (EditUserInput == ":r")
       {
         DocumentHistory.Redo();
       }
       else
       {
-        CurrentDocument.Content += userInput + Environment.NewLine;
+        CurrentDocument.Content += EditUserInput + Environment.NewLine;
         DocumentHistory.SaveState();
       }
     }
   }
+
+  public void SaveDocument()
+  {
+    if (CurrentDocument == null)
+    {
+      Console.WriteLine("No document to save.");
+    }
+    else
+    {
+      CurrentDocument.SaveToFile();
+      Console.WriteLine("Document saved.");
+    }
+
+    Console.WriteLine("Press any key...");
+    Console.ReadKey();
+  }
+}

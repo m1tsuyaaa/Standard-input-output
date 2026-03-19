@@ -7,6 +7,20 @@ public class DocumentSearcher
   public string RootDirectory;
   public List<TextDocument> Documents;
 
+  public string[] TextFiles;
+  public int Index;
+  public TextDocument Document;
+
+  public List<TextDocument> SearchResults;
+  public StringComparison ComparisonType;
+  public int KeywordNotFound;
+  public int DocumentIndex;
+  public int KeywordIndex;
+  public int KeywordPosition;
+  public TextDocument CurrentDocument;
+  public string CurrentKeyword;
+  public bool DocumentMatches;
+
   public DocumentSearcher(string directory)
   {
     RootDirectory = directory;
@@ -15,18 +29,14 @@ public class DocumentSearcher
 
   public void IndexAll()
   {
-    string[] textFiles;
-    textFiles = Directory.GetFiles(RootDirectory, "*.txt", SearchOption.AllDirectories);
+    TextFiles = Directory.GetFiles(RootDirectory, "*.txt", SearchOption.AllDirectories);
 
-    int index;
-    TextDocument document;
-
-    for (index = 0; index < textFiles.Length; ++index)
+    for (Index = 0; Index < TextFiles.Length; ++Index)
     {
       try
       {
-        document = new TextDocument(textFiles[index]);
-        Documents.Add(document);
+        Document = new TextDocument(TextFiles[Index]);
+        Documents.Add(Document);
       }
       catch
       {
@@ -36,53 +46,42 @@ public class DocumentSearcher
 
   public List<TextDocument> Search(List<string> keywords, bool caseSensitive = false)
   {
-    List<TextDocument> searchResults;
-    searchResults = new List<TextDocument>();
-
-    StringComparison comparisonType;
+    SearchResults = new List<TextDocument>();
 
     if (caseSensitive)
     {
-      comparisonType = StringComparison.Ordinal;
+      ComparisonType = StringComparison.Ordinal;
     }
     else
     {
-      comparisonType = StringComparison.OrdinalIgnoreCase;
+      ComparisonType = StringComparison.OrdinalIgnoreCase;
     }
 
-    int keywordNotFound;
-    keywordNotFound = -1;
+    KeywordNotFound = -1;
 
-    int documentIndex;
-    int keywordIndex;
-    int keywordPosition;
-    TextDocument currentDocument;
-    string currentKeyword;
-    bool documentMatches;
-
-    for (documentIndex = 0; documentIndex < Documents.Count; ++documentIndex)
+    for (DocumentIndex = 0; DocumentIndex < Documents.Count; ++DocumentIndex)
     {
-      currentDocument = Documents[documentIndex];
-      documentMatches = true;
+      CurrentDocument = Documents[DocumentIndex];
+      DocumentMatches = true;
 
-      for (keywordIndex = 0; keywordIndex < keywords.Count; ++keywordIndex)
+      for (KeywordIndex = 0; KeywordIndex < keywords.Count; ++KeywordIndex)
       {
-        currentKeyword = keywords[keywordIndex];
-        keywordPosition = currentDocument.Content.IndexOf(currentKeyword, comparisonType);
+        CurrentKeyword = keywords[KeywordIndex];
+        KeywordPosition = CurrentDocument.Content.IndexOf(CurrentKeyword, ComparisonType);
 
-        if (keywordPosition == keywordNotFound)
+        if (KeywordPosition == KeywordNotFound)
         {
-          documentMatches = false;
+          DocumentMatches = false;
           break;
         }
       }
 
-      if (documentMatches)
+      if (DocumentMatches)
       {
-        searchResults.Add(currentDocument);
+        SearchResults.Add(CurrentDocument);
       }
     }
 
-    return searchResults;
+    return SearchResults;
   }
 }
