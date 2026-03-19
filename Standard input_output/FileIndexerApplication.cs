@@ -9,7 +9,7 @@ public class FileIndexerApplication
 
   public void Run()
   {
-    Console.WriteLine("=== Text File Indexer ===");
+    Console.WriteLine("Text File Indexer");
     Console.Write("Enter directory path: ");
     IndexDirectory = Console.ReadLine();
 
@@ -26,10 +26,11 @@ public class FileIndexerApplication
 
     Console.WriteLine($"Files indexed: {DocumentSearcher.Documents.Count}");
 
+    string userChoice;
+
     while (true)
     {
       DisplayIndexerMenu();
-      string userChoice;
       userChoice = Console.ReadLine();
 
       if (userChoice == "1")
@@ -100,11 +101,13 @@ public class FileIndexerApplication
     int baseNumber;
     baseNumber = 1;
 
+    int displayNumber;
+    int baseNumber;
+    baseNumber = 1;
+
     for (resultIndex = 0; resultIndex < searchResults.Count; ++resultIndex)
     {
       currentDocument = searchResults[resultIndex];
-
-      int displayNumber;
       displayNumber = resultIndex + baseNumber;
 
       Console.WriteLine($"{displayNumber}. {currentDocument.FileName}");

@@ -4,6 +4,8 @@ class Program
 {
   static void Main(string[] args)
   {
+    string userChoice;
+
     while (true)
     {
       Console.Clear();
@@ -13,7 +15,6 @@ class Program
       Console.WriteLine("3. Exit");
       Console.Write("Select application: ");
 
-      string userChoice;
       userChoice = Console.ReadLine();
 
       if (userChoice == "1")
@@ -39,4 +40,3 @@ class Program
       }
     }
   }
-}

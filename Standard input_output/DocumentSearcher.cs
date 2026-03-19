@@ -46,7 +46,7 @@ public class DocumentSearcher
       comparisonType = StringComparison.Ordinal;
     }
     else
-    {
+    {-
       comparisonType = StringComparison.OrdinalIgnoreCase;
     }
 

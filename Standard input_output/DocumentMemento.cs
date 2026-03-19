@@ -37,7 +37,15 @@ public class DocumentHistory
     get
     {
       bool canUndo;
-      canUndo = UndoStack.Count > 1;
+
+      int minimumStackSize;
+      minimumStackSize = 1;
+
+      int currentStackSize;
+      currentStackSize = UndoStack.Count;
+
+      canUndo = currentStackSize > minimumStackSize;
+
       return canUndo;
     }
   }
