@@ -46,9 +46,12 @@ public class DocumentSearcher
       comparisonType = StringComparison.Ordinal;
     }
     else
-    {-
+    {
       comparisonType = StringComparison.OrdinalIgnoreCase;
     }
+
+    int keywordNotFound;
+    keywordNotFound = -1;
 
     int documentIndex;
     int keywordIndex;
@@ -67,16 +70,14 @@ public class DocumentSearcher
         currentKeyword = keywords[keywordIndex];
         keywordPosition = currentDocument.Content.IndexOf(currentKeyword, comparisonType);
 
-        int keywordNotFound;
-        keywordNotFound = -1;
-
         if (keywordPosition == keywordNotFound)
         {
           documentMatches = false;
           break;
         }
+      }
 
-        if (documentMatches)
+      if (documentMatches)
       {
         searchResults.Add(currentDocument);
       }

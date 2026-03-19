@@ -109,10 +109,16 @@ public class ConsoleTextEditor
     int fiftyPercentValue;
     fiftyPercentValue = 50;
 
+    string userInput;
+
     while (editing)
     {
       Console.Clear();
       Console.WriteLine("Editing");
+
+      int fiftyPercentValue;
+      fiftyPercentValue = 50;
+
       Console.WriteLine(new string('-', fiftyPercentValue));
       Console.WriteLine(CurrentDocument.Content);
       Console.WriteLine(new string('-', fiftyPercentValue));
@@ -121,7 +127,6 @@ public class ConsoleTextEditor
       Console.WriteLine(":u - undo");
       Console.WriteLine(":r - redo");
 
-      string userInput;
       userInput = Console.ReadLine();
 
       if (userInput == ":w")
@@ -149,4 +154,3 @@ public class ConsoleTextEditor
       }
     }
   }
-}
