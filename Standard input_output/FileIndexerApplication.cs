@@ -9,22 +9,22 @@ public class FileIndexerApplication
 
   public void Run()
   {
-    Console.WriteLine("=== Индексатор текстовых файлов ===");
-    Console.Write("Введите путь к директории: ");
+    Console.WriteLine("=== Text File Indexer ===");
+    Console.Write("Enter directory path: ");
     IndexDirectory = Console.ReadLine();
 
     if (!Directory.Exists(IndexDirectory))
     {
-      Console.WriteLine("Директория не существует.");
+      Console.WriteLine("Directory does not exist.");
       return;
     }
 
     DocumentSearcher = new DocumentSearcher(IndexDirectory);
 
-    Console.WriteLine("Индексация файлов...");
+    Console.WriteLine("Indexing files...");
     DocumentSearcher.IndexAll();
 
-    Console.WriteLine($"Проиндексировано файлов: {DocumentSearcher.Documents.Count}");
+    Console.WriteLine($"Files indexed: {DocumentSearcher.Documents.Count}");
 
     while (true)
     {
@@ -50,24 +50,24 @@ public class FileIndexerApplication
       }
       else
       {
-        Console.WriteLine("Неверный выбор.");
+        Console.WriteLine("Invalid choice.");
       }
     }
   }
 
   public void DisplayIndexerMenu()
   {
-    Console.WriteLine("\n=== Меню индексатора ===");
-    Console.WriteLine("1. Поиск по ключевым словам");
-    Console.WriteLine("2. Переиндексировать");
-    Console.WriteLine("3. Показать все документы");
-    Console.WriteLine("4. Выход");
-    Console.Write("Выберите действие: ");
+    Console.WriteLine("\n=== Indexer Menu ===");
+    Console.WriteLine("1. Search by keywords");
+    Console.WriteLine("2. Reindex");
+    Console.WriteLine("3. Show all documents");
+    Console.WriteLine("4. Exit");
+    Console.Write("Select action: ");
   }
 
   public void PerformKeywordSearch()
   {
-    Console.Write("Введите ключевые слова через запятую: ");
+    Console.Write("Enter keywords separated by commas: ");
     string keywordInput;
     keywordInput = Console.ReadLine();
 
@@ -82,7 +82,7 @@ public class FileIndexerApplication
       keywords[index] = keywords[index].Trim();
     }
 
-    Console.Write("Учитывать регистр? (y/n): ");
+    Console.Write("Case sensitive? (y/n): ");
     string caseSensitiveInput;
     caseSensitiveInput = Console.ReadLine();
 
@@ -92,7 +92,7 @@ public class FileIndexerApplication
     List<TextDocument> searchResults;
     searchResults = DocumentSearcher.Search(keywords, caseSensitive);
 
-    Console.WriteLine($"\nНайдено документов: {searchResults.Count}");
+    Console.WriteLine($"\nDocuments found: {searchResults.Count}");
 
     int resultIndex;
     TextDocument currentDocument;
@@ -110,22 +110,22 @@ public class FileIndexerApplication
       Console.WriteLine($"{displayNumber}. {currentDocument.FileName}");
     }
 
-    Console.WriteLine("\nНажмите любую клавишу...");
+    Console.WriteLine("\nPress any key...");
     Console.ReadKey();
   }
 
   public void ReindexDirectory()
   {
-    Console.WriteLine("Переиндексация...");
+    Console.WriteLine("Reindexing...");
     DocumentSearcher.IndexAll();
-    Console.WriteLine($"Файлов: {DocumentSearcher.Documents.Count}");
-    Console.WriteLine("Нажмите любую клавишу...");
+    Console.WriteLine($"Files: {DocumentSearcher.Documents.Count}");
+    Console.WriteLine("Press any key...");
     Console.ReadKey();
   }
 
   public void DisplayAllDocuments()
   {
-    Console.WriteLine("\n=== Все документы ===");
+    Console.WriteLine("\n=== All Documents ===");
 
     int docIndex;
     TextDocument currentDocument;
@@ -134,12 +134,12 @@ public class FileIndexerApplication
     {
       currentDocument = DocumentSearcher.Documents[docIndex];
       Console.WriteLine($"{docIndex + 1}. {currentDocument.FileName}");
-      Console.WriteLine($"   Путь: {currentDocument.FilePath}");
-      Console.WriteLine($"   Размер: {currentDocument.Content.Length} симв.");
+      Console.WriteLine($"   Path: {currentDocument.FilePath}");
+      Console.WriteLine($"   Size: {currentDocument.Content.Length} chars");
       Console.WriteLine();
     }
 
-    Console.WriteLine("Нажмите любую клавишу...");
+    Console.WriteLine("Press any key...");
     Console.ReadKey();
   }
 }

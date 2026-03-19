@@ -5,25 +5,27 @@ class Program
   static void Main(string[] args)
   {
     while (true)
-    { 
+    {
       Console.Clear();
-      Console.WriteLine("=== Главное меню ===");
-      Console.WriteLine("1. Текстовый редактор");
-      Console.WriteLine("2. Индексатор файлов");
-      Console.WriteLine("3. Выход");
-      Console.Write("Выберите приложение: ");
+      Console.WriteLine("=== Main Menu ===");
+      Console.WriteLine("1. Text Editor");
+      Console.WriteLine("2. File Indexer");
+      Console.WriteLine("3. Exit");
+      Console.Write("Select application: ");
 
       string userChoice;
       userChoice = Console.ReadLine();
 
       if (userChoice == "1")
       {
-        ConsoleTextEditor textEditor = new ConsoleTextEditor();
+        ConsoleTextEditor textEditor;
+        textEditor = new ConsoleTextEditor();
         textEditor.Run();
       }
       else if (userChoice == "2")
       {
-        FileIndexerApplication fileIndexer = new FileIndexerApplication();
+        FileIndexerApplication fileIndexer;
+        fileIndexer = new FileIndexerApplication();
         fileIndexer.Run();
       }
       else if (userChoice == "3")
@@ -32,7 +34,7 @@ class Program
       }
       else
       {
-        Console.WriteLine("Неверный выбор.");
+        Console.WriteLine("Invalid choice.");
         Console.ReadKey();
       }
     }

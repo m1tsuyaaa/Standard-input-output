@@ -40,7 +40,15 @@ public class DocumentSearcher
     searchResults = new List<TextDocument>();
 
     StringComparison comparisonType;
-    comparisonType = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+
+    if (caseSensitive)
+    {
+      comparisonType = StringComparison.Ordinal;
+    }
+    else
+    {
+      comparisonType = StringComparison.OrdinalIgnoreCase;
+    }
 
     int documentIndex;
     int keywordIndex;
@@ -59,14 +67,16 @@ public class DocumentSearcher
         currentKeyword = keywords[keywordIndex];
         keywordPosition = currentDocument.Content.IndexOf(currentKeyword, comparisonType);
 
-        if (keywordPosition == -1)
+        int keywordNotFound;
+        keywordNotFound = -1;
+
+        if (keywordPosition == keywordNotFound)
         {
           documentMatches = false;
           break;
         }
-      }
 
-      if (documentMatches)
+        if (documentMatches)
       {
         searchResults.Add(currentDocument);
       }

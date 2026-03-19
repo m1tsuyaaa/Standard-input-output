@@ -32,7 +32,7 @@ public class ConsoleTextEditor
       }
       else
       {
-        Console.WriteLine("Неверный выбор.");
+        Console.WriteLine("Invalid choice.");
       }
     }
   }
@@ -40,24 +40,24 @@ public class ConsoleTextEditor
   public void DisplayMainMenu()
   {
     Console.Clear();
-    Console.WriteLine("=== Текстовый редактор ===");
-    Console.WriteLine("1. Открыть документ");
-    Console.WriteLine("2. Создать новый документ");
-    Console.WriteLine("3. Редактировать документ");
-    Console.WriteLine("4. Сохранить документ");
-    Console.WriteLine("5. Выход");
+    Console.WriteLine("=== Text Editor ===");
+    Console.WriteLine("1. Open document");
+    Console.WriteLine("2. Create new document");
+    Console.WriteLine("3. Edit document");
+    Console.WriteLine("4. Save document");
+    Console.WriteLine("5. Exit");
 
     if (CurrentDocument != null)
     {
-      Console.WriteLine($"\nТекущий документ: {CurrentDocument.FileName}");
+      Console.WriteLine($"\nCurrent document: {CurrentDocument.FileName}");
     }
 
-    Console.Write("\nВыберите действие: ");
+    Console.Write("\nSelect action: ");
   }
 
   public void OpenDocument()
   {
-    Console.Write("Введите путь к файлу: ");
+    Console.Write("Enter file path: ");
     string filePath;
     filePath = Console.ReadLine();
 
@@ -65,20 +65,20 @@ public class ConsoleTextEditor
     {
       CurrentDocument = new TextDocument(filePath);
       DocumentHistory = new DocumentHistory(CurrentDocument);
-      Console.WriteLine("Документ загружен.");
+      Console.WriteLine("Document loaded.");
     }
     else
     {
-      Console.WriteLine("Файл не найден.");
+      Console.WriteLine("File not found.");
     }
 
-    Console.WriteLine("Нажмите любую клавишу...");
+    Console.WriteLine("Press any key...");
     Console.ReadKey();
   }
 
   public void CreateNewDocument()
   {
-    Console.Write("Введите путь для нового файла: ");
+    Console.Write("Enter path for new file: ");
     string filePath;
     filePath = Console.ReadLine();
 
@@ -88,8 +88,8 @@ public class ConsoleTextEditor
     };
 
     DocumentHistory = new DocumentHistory(CurrentDocument);
-    Console.WriteLine("Новый документ создан.");
-    Console.WriteLine("Нажмите любую клавишу...");
+    Console.WriteLine("New document created.");
+    Console.WriteLine("Press any key...");
     Console.ReadKey();
   }
 
@@ -97,8 +97,8 @@ public class ConsoleTextEditor
   {
     if (CurrentDocument == null)
     {
-      Console.WriteLine("Сначала откройте документ.");
-      Console.WriteLine("Нажмите любую клавишу...");
+      Console.WriteLine("Open a document first.");
+      Console.WriteLine("Press any key...");
       Console.ReadKey();
       return;
     }
@@ -112,14 +112,14 @@ public class ConsoleTextEditor
     while (editing)
     {
       Console.Clear();
-      Console.WriteLine("Редактирование");
+      Console.WriteLine("Editing");
       Console.WriteLine(new string('-', fiftyPercentValue));
       Console.WriteLine(CurrentDocument.Content);
       Console.WriteLine(new string('-', fiftyPercentValue));
-      Console.WriteLine(":w - сохранить и выйти");
-      Console.WriteLine(":q - выйти без сохранения");
-      Console.WriteLine(":u - отменить");
-      Console.WriteLine(":r - повторить");
+      Console.WriteLine(":w - save and exit");
+      Console.WriteLine(":q - exit without saving");
+      Console.WriteLine(":u - undo");
+      Console.WriteLine(":r - redo");
 
       string userInput;
       userInput = Console.ReadLine();
